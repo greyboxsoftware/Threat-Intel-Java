@@ -5,9 +5,19 @@
  */
 package ThreatIntel;
 
+import static com.sun.org.apache.xalan.internal.lib.ExsltDatetime.date;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
+import java.util.Arrays;
+import java.util.Random;
 import javax.swing.JOptionPane;
-import java.util.regex.*;
 
 /**
  *
@@ -22,6 +32,8 @@ public class ThreatIntel extends javax.swing.JFrame {
         initComponents();
     }
 
+    int counter = 0; 
+    String[] exportanomalicsv = {};
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -31,6 +43,12 @@ public class ThreatIntel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel1 = new javax.swing.JPanel();
+        senderbase = new javax.swing.JCheckBox();
+        abuseipdb = new javax.swing.JCheckBox();
+        malwaredomainlist = new javax.swing.JCheckBox();
+        maxmind = new javax.swing.JCheckBox();
         inputBox = new javax.swing.JTextField();
         submitButton = new javax.swing.JButton();
         anomali = new javax.swing.JCheckBox();
@@ -40,18 +58,49 @@ public class ThreatIntel extends javax.swing.JFrame {
         robtex = new javax.swing.JCheckBox();
         jLabel1 = new javax.swing.JLabel();
         cymon = new javax.swing.JCheckBox();
-        senderbase = new javax.swing.JCheckBox();
-        abuseipdb = new javax.swing.JCheckBox();
-        malwaredomainlist = new javax.swing.JCheckBox();
-        maxmind = new javax.swing.JCheckBox();
+        checkall = new javax.swing.JButton();
+        jPanel2 = new javax.swing.JPanel();
+        anomaliebulkpanel = new javax.swing.JPanel();
+        anomaliuser = new javax.swing.JTextField();
+        anomaliapikey = new javax.swing.JTextField();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        anomaliinput = new javax.swing.JTextArea();
+        searchanomali = new javax.swing.JButton();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        anomalioutput = new javax.swing.JTextArea();
+        clearanomalioutput = new javax.swing.JButton();
+        exportanomali = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Threat Intel Search");
         setBackground(new java.awt.Color(255, 255, 255));
         setForeground(java.awt.Color.white);
 
+        jTabbedPane1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+
+        senderbase.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        senderbase.setSelected(true);
+        senderbase.setText("SenderBase");
+
+        abuseipdb.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        abuseipdb.setSelected(true);
+        abuseipdb.setText("AbuseIPDB");
+
+        malwaredomainlist.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        malwaredomainlist.setSelected(true);
+        malwaredomainlist.setText("Malware Domain List");
+
+        maxmind.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        maxmind.setSelected(true);
+        maxmind.setText("MaxMind");
+
         inputBox.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
         inputBox.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        inputBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                inputBoxActionPerformed(evt);
+            }
+        });
 
         submitButton.setFont(new java.awt.Font("Consolas", 1, 18)); // NOI18N
         submitButton.setText("Search");
@@ -89,79 +138,246 @@ public class ThreatIntel extends javax.swing.JFrame {
         cymon.setSelected(true);
         cymon.setText("Cymon");
 
-        senderbase.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        senderbase.setSelected(true);
-        senderbase.setText("SenderBase");
+        checkall.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        checkall.setText("Check / Uncheck All");
+        checkall.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                checkallActionPerformed(evt);
+            }
+        });
 
-        abuseipdb.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        abuseipdb.setSelected(true);
-        abuseipdb.setText("AbuseIPDB");
-
-        malwaredomainlist.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        malwaredomainlist.setSelected(true);
-        malwaredomainlist.setText("Malware Domain List");
-
-        maxmind.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
-        maxmind.setSelected(true);
-        maxmind.setText("MaxMind");
-
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(inputBox)
                     .addComponent(submitButton, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(anomali, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(virustotal, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(alienvault, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(isc, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(robtex, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(robtex, javax.swing.GroupLayout.PREFERRED_SIZE, 129, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addComponent(malwaredomainlist, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(abuseipdb, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(senderbase, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(cymon, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(maxmind, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(maxmind, javax.swing.GroupLayout.PREFERRED_SIZE, 177, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(checkall, javax.swing.GroupLayout.PREFERRED_SIZE, 247, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 853, Short.MAX_VALUE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 844, Short.MAX_VALUE))
                 .addContainerGap())
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(18, 18, 18)
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 27, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(inputBox, javax.swing.GroupLayout.PREFERRED_SIZE, 108, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(submitButton, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(anomali)
-                    .addComponent(cymon))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(virustotal)
-                    .addComponent(senderbase))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(alienvault)
-                    .addComponent(abuseipdb))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(isc)
-                    .addComponent(malwaredomainlist))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(robtex)
-                    .addComponent(maxmind))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(anomali)
+                            .addComponent(cymon))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(virustotal)
+                            .addComponent(senderbase))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(alienvault)
+                            .addComponent(abuseipdb))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(isc)
+                            .addComponent(malwaredomainlist))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(robtex)
+                            .addComponent(maxmind)))
+                    .addComponent(checkall, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+
+        jTabbedPane1.addTab("Threat Intel (IP)", jPanel1);
+
+        anomaliebulkpanel.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        anomaliebulkpanel.setName(""); // NOI18N
+
+        anomaliuser.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        anomaliuser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        anomaliuser.setText("Anomali Username");
+        anomaliuser.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                anomaliuserFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                anomaliuserFocusLost(evt);
+            }
+        });
+        anomaliuser.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                anomaliuserMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                anomaliuserMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                anomaliuserMouseExited(evt);
+            }
+        });
+
+        anomaliapikey.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        anomaliapikey.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        anomaliapikey.setText("Anomali API Key");
+        anomaliapikey.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                anomaliapikeyFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                anomaliapikeyFocusLost(evt);
+            }
+        });
+        anomaliapikey.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                anomaliapikeyMouseClicked(evt);
+            }
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                anomaliapikeyMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                anomaliapikeyMouseExited(evt);
+            }
+        });
+
+        anomaliinput.setColumns(20);
+        anomaliinput.setFont(new java.awt.Font("Consolas", 1, 12)); // NOI18N
+        anomaliinput.setRows(5);
+        anomaliinput.setText("Enter IP addresses in the following format\n1.1.1.1\n2.2.2.2\n3.3.3.3\n4.4.4.4");
+        anomaliinput.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                anomaliinputMouseEntered(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                anomaliinputMouseExited(evt);
+            }
+        });
+        jScrollPane1.setViewportView(anomaliinput);
+
+        searchanomali.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        searchanomali.setText("Search");
+        searchanomali.setEnabled(false);
+        searchanomali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                searchanomaliActionPerformed(evt);
+            }
+        });
+
+        anomalioutput.setEditable(false);
+        anomalioutput.setBackground(new java.awt.Color(0, 0, 255));
+        anomalioutput.setColumns(20);
+        anomalioutput.setFont(new java.awt.Font("Consolas", 1, 10)); // NOI18N
+        anomalioutput.setForeground(new java.awt.Color(255, 255, 255));
+        anomalioutput.setRows(5);
+        anomalioutput.setText("Output will be displayed here ...");
+        anomalioutput.setDisabledTextColor(new java.awt.Color(255, 255, 255));
+        anomalioutput.setPreferredSize(null);
+        jScrollPane2.setViewportView(anomalioutput);
+        anomalioutput.getAccessibleContext().setAccessibleParent(jScrollPane1);
+
+        clearanomalioutput.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        clearanomalioutput.setText("Clear Output Pane");
+        clearanomalioutput.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                clearanomalioutputActionPerformed(evt);
+            }
+        });
+
+        exportanomali.setFont(new java.awt.Font("Consolas", 1, 14)); // NOI18N
+        exportanomali.setText("Export To CSV");
+        exportanomali.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                exportanomaliActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout anomaliebulkpanelLayout = new javax.swing.GroupLayout(anomaliebulkpanel);
+        anomaliebulkpanel.setLayout(anomaliebulkpanelLayout);
+        anomaliebulkpanelLayout.setHorizontalGroup(
+            anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, anomaliebulkpanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 348, Short.MAX_VALUE)
+                    .addComponent(anomaliuser))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(anomaliapikey)
+                    .addComponent(searchanomali, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, anomaliebulkpanelLayout.createSequentialGroup()
+                        .addComponent(clearanomalioutput, javax.swing.GroupLayout.PREFERRED_SIZE, 241, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(exportanomali, javax.swing.GroupLayout.DEFAULT_SIZE, 235, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addContainerGap())
+        );
+        anomaliebulkpanelLayout.setVerticalGroup(
+            anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(anomaliebulkpanelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(anomaliuser, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(anomaliapikey, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(anomaliebulkpanelLayout.createSequentialGroup()
+                        .addComponent(searchanomali, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(anomaliebulkpanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(exportanomali)
+                            .addComponent(clearanomalioutput))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 268, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap())
+                    .addComponent(jScrollPane1)))
+        );
+
+        clearanomalioutput.getAccessibleContext().setAccessibleParent(jScrollPane1);
+        exportanomali.getAccessibleContext().setAccessibleParent(jScrollPane1);
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(anomaliebulkpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(anomaliebulkpanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Anomali Bulk IP Intel", jPanel2);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jTabbedPane1)
         );
 
         pack();
@@ -169,6 +385,263 @@ public class ThreatIntel extends javax.swing.JFrame {
 
     private void submitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_submitButtonActionPerformed
         // TODO add your handling code here:
+        getThreatIntel(); 
+        
+    }//GEN-LAST:event_submitButtonActionPerformed
+
+    private void inputBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_inputBoxActionPerformed
+        // TODO add your handling code here:
+        getThreatIntel(); 
+    }//GEN-LAST:event_inputBoxActionPerformed
+
+    private void checkallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkallActionPerformed
+        // TODO add your handling code here:
+        if (counter == 0) {
+            anomali.setSelected(false); 
+            virustotal.setSelected(false); 
+            alienvault.setSelected(false); 
+            isc.setSelected(false); 
+            robtex.setSelected(false); 
+            cymon.setSelected(false); 
+            senderbase.setSelected(false); 
+            abuseipdb.setSelected(false); 
+            malwaredomainlist.setSelected(false); 
+            maxmind.setSelected(false); 
+            counter = 1; 
+        } else {
+            anomali.setSelected(true); 
+            virustotal.setSelected(true); 
+            alienvault.setSelected(true); 
+            isc.setSelected(true); 
+            robtex.setSelected(true); 
+            cymon.setSelected(true); 
+            senderbase.setSelected(true); 
+            abuseipdb.setSelected(true); 
+            malwaredomainlist.setSelected(true); 
+            maxmind.setSelected(true); 
+            counter = 0; 
+        }
+    }//GEN-LAST:event_checkallActionPerformed
+
+    private void anomaliuserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliuserMouseClicked
+        // TODO add your handling code here:
+        //anomaliuser.setText("");
+    }//GEN-LAST:event_anomaliuserMouseClicked
+
+    private void anomaliapikeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliapikeyMouseClicked
+        // TODO add your handling code here:
+        //anomaliapikey.setText(""); 
+    }//GEN-LAST:event_anomaliapikeyMouseClicked
+
+    private void anomaliuserMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliuserMouseExited
+        // TODO add your handling code here:
+        
+        if (anomaliuser.isFocusOwner() || !anomaliuser.getText().isEmpty()) {
+            
+        }
+        else {
+            anomaliuser.setText("Anomali Username"); 
+        }
+    }//GEN-LAST:event_anomaliuserMouseExited
+
+    private void anomaliuserMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliuserMouseEntered
+        // TODO add your handling code here:
+        if (anomaliuser.getText().equals("Anomali Username")) {
+            anomaliuser.setText("");
+        }
+         
+    }//GEN-LAST:event_anomaliuserMouseEntered
+
+    private void anomaliapikeyMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliapikeyMouseEntered
+        // TODO add your handling code here:
+        if (anomaliapikey.getText().equals("Anomali API Key")) {
+            anomaliapikey.setText("");
+        }
+         
+        
+    }//GEN-LAST:event_anomaliapikeyMouseEntered
+
+    private void anomaliapikeyMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliapikeyMouseExited
+        // TODO add your handling code here:
+        if (anomaliapikey.isFocusOwner() || !anomaliapikey.getText().isEmpty()) {
+            
+        }
+        else {
+            anomaliapikey.setText("Anomali API Key"); 
+        }
+    }//GEN-LAST:event_anomaliapikeyMouseExited
+
+    private void anomaliinputMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliinputMouseEntered
+        // TODO add your handling code here:
+        
+        if (anomaliuser.getText().equals("Anomali Username") && anomaliapikey.getText().equals("Anomali API Key")) {
+            anomaliinput.setEnabled(false);
+        } 
+        if (!anomaliinput.getText().isEmpty()) {
+            
+        }
+        else {
+            anomaliinput.setText(""); 
+        }
+    }//GEN-LAST:event_anomaliinputMouseEntered
+
+    private void anomaliinputMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliinputMouseExited
+        // TODO add your handling code here:
+        
+        if (!anomaliuser.getText().equals("Anomali Username") && !anomaliapikey.getText().equals("Anomali API Key")) {
+            anomaliinput.setEnabled(true);
+            searchanomali.setEnabled(true);
+        } else {
+            anomaliinput.setText("Enter IP addresses in the following format\n" +
+                "1.1.1.1\n" +
+                "2.2.2.2\n" +
+                "3.3.3.3\n" +
+                "4.4.4.4"); 
+            searchanomali.setEnabled(false); 
+        }
+    }//GEN-LAST:event_anomaliinputMouseExited
+
+    private void searchanomaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_searchanomaliActionPerformed
+        // TODO add your handling code here:
+        
+        if (anomaliuser.getText().matches(".+?@.*\\.?") && !anomaliapikey.getText().isEmpty()) {
+            System.out.println("valid email");
+            
+            for (String line : anomaliinput.getText().split("\\n")){
+                System.out.println(line); 
+                try {
+                anomaliAPIcall(line);
+                } catch (Exception ex) {
+                    System.out.println(ex); 
+                }
+            }
+        } else {
+            System.out.println("INVALID"); 
+        }
+        
+       
+    }//GEN-LAST:event_searchanomaliActionPerformed
+
+    public void anomaliAPIcall(String IP) throws IOException {
+            try {
+            String anomaliAPILink = "https://api.threatstream.com/api/v2/intelligence/?username=" + anomaliuser.getText() + 
+                    "&api_key=" + anomaliapikey.getText() + "&ip=" + IP;
+            String link = anomaliAPILink;
+            URL anomaliAPIuri = new URL(link);
+            anomaliAPIuri.equals(anomaliAPIuri);
+            System.out.println(anomaliAPIuri); 
+            
+                       
+            HttpURLConnection conn = (HttpURLConnection) anomaliAPIuri.openConnection();
+
+            if (conn.getResponseCode() != 200) {
+              throw new IOException(conn.getResponseMessage());
+            }
+
+            // Buffer the result into a string
+            
+            //System.out.println(conn.getInputStream().toString());
+            BufferedReader rd = new BufferedReader(
+                new InputStreamReader(conn.getInputStream()));
+            StringBuilder sb = new StringBuilder();
+            String line;
+            while ((line = rd.readLine()) != null) {
+              sb.append(line);
+            }
+            rd.close();
+            
+            
+            conn.disconnect();
+            //return sb.toString();
+            
+            //String finalString = sb.toString();
+           
+            
+            String[] parse = sb.toString().split(",");
+            
+            for (int i = 0; i < parse.length; i++) {
+                parse[i] = parse[i].replace("[", "");
+                parse[i] = parse[i].replace("{", "");
+                parse[i] = parse[i].replace("]", "");
+                parse[i] = parse[i].replace("}", "");
+                parse[i] = parse[i].replace("\"", "");
+                //parse[i] = parse[i].replace("[objects:", "");
+            }
+            
+            for (int i = 0; i < parse.length; i++) {
+                anomalioutput.append("\n");
+                if (parse[i].contains("status")) {
+                    anomalioutput.append("\n");
+                }
+                anomalioutput.append(parse[i]);
+                
+            }
+            
+            exportanomalicsv = parse;
+            System.out.println(Arrays.toString(parse));
+            //System.out.println(sb);
+            } catch (MalformedURLException ex) {
+                System.out.println(ex);
+                anomalioutput.append("\n" + ex);
+            } catch (Exception e) {
+                anomalioutput.append("\n" + e.getMessage()); 
+            }
+    }
+    
+    private void anomaliuserFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliuserFocusGained
+        // TODO add your handling code here:
+        //anomaliuser.setText("");
+    }//GEN-LAST:event_anomaliuserFocusGained
+
+    private void anomaliapikeyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliapikeyFocusGained
+        // TODO add your handling code here:
+        //anomaliapikey.setText("");
+    }//GEN-LAST:event_anomaliapikeyFocusGained
+
+    private void anomaliuserFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliuserFocusLost
+        // TODO add your handling code here:
+        //if (anomaliuser.getText().isEmpty()) {
+        //    anomaliuser.setText("Anomali Username");
+        //}
+    }//GEN-LAST:event_anomaliuserFocusLost
+
+    private void anomaliapikeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliapikeyFocusLost
+        // TODO add your handling code here:
+        //if (anomaliapikey.getText().isEmpty()) {
+        //    anomaliapikey.setText("Anomali API Key"); 
+       // }
+    }//GEN-LAST:event_anomaliapikeyFocusLost
+
+    private void clearanomalioutputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clearanomalioutputActionPerformed
+        // TODO add your handling code here:
+        anomalioutput.setText("");
+    }//GEN-LAST:event_clearanomalioutputActionPerformed
+
+    private void exportanomaliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_exportanomaliActionPerformed
+        // TODO add your handling code here:
+        try {
+        Random random = new Random(); 
+        String newFileString = "C:\\temp\\" + random.toString() + ".csv";
+        System.out.println(newFileString); 
+        File file = new File(newFileString);
+        file.getParentFile().mkdirs();
+        
+        FileWriter writer = new FileWriter(file);
+        
+
+        for (int j = 0; j < exportanomalicsv.length; j++) {
+            writer.append(String.valueOf(exportanomalicsv[j]));
+            writer.append("\n");
+        }
+        writer.close();
+    
+        Arrays.fill(exportanomalicsv, null);
+        } catch (Exception e) {
+            anomalioutput.append("\n" + e.getMessage());
+        }
+    }//GEN-LAST:event_exportanomaliActionPerformed
+
+    public void getThreatIntel() {
         System.out.println(inputBox.getText());
         
         if (inputBox.getText().isEmpty()) {
@@ -296,11 +769,11 @@ public class ThreatIntel extends javax.swing.JFrame {
         
       
         inputBox.setText("");
-        
-        
-        
-    }//GEN-LAST:event_submitButtonActionPerformed
-
+    }
+    
+    
+    
+    
     /**
      * @param args the command line arguments
      */
@@ -340,13 +813,27 @@ public class ThreatIntel extends javax.swing.JFrame {
     private javax.swing.JCheckBox abuseipdb;
     private javax.swing.JCheckBox alienvault;
     private javax.swing.JCheckBox anomali;
+    private javax.swing.JTextField anomaliapikey;
+    private javax.swing.JPanel anomaliebulkpanel;
+    private javax.swing.JTextArea anomaliinput;
+    private javax.swing.JTextArea anomalioutput;
+    private javax.swing.JTextField anomaliuser;
+    private javax.swing.JButton checkall;
+    private javax.swing.JButton clearanomalioutput;
     private javax.swing.JCheckBox cymon;
+    private javax.swing.JButton exportanomali;
     private javax.swing.JTextField inputBox;
     private javax.swing.JCheckBox isc;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
     private javax.swing.JCheckBox malwaredomainlist;
     private javax.swing.JCheckBox maxmind;
     private javax.swing.JCheckBox robtex;
+    private javax.swing.JButton searchanomali;
     private javax.swing.JCheckBox senderbase;
     private javax.swing.JButton submitButton;
     private javax.swing.JCheckBox virustotal;
