@@ -12,4 +12,4 @@ This application does the following
 This application is a continually evolving process and I will continually update the download link below and the version control here on github. Also note that the version number will be listed at the top of the readme file and the version can be found in the option tab of the application. Keeping these in sync will be important to keep up to date with the application. 
 
 You can download the program here for your ease of use 
-  http://greyboxsoftwaresolutions.com/wp-content/uploads/2016/12/Threat_Intel.jar_.zip
+http://greyboxsoftwaresolutions.com/wp-content/uploads/2016/12/Threat_Intel.jar_.zip
