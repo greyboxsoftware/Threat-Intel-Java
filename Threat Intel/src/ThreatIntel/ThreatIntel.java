@@ -268,9 +268,6 @@ public class ThreatIntel extends javax.swing.JFrame {
         anomaliuser.setText("Anomali Username");
         anomaliuser.setToolTipText("Enter the email address of the registered Anomali account that you will use to query there API. (ex. user@example.com)");
         anomaliuser.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                anomaliuserFocusGained(evt);
-            }
             public void focusLost(java.awt.event.FocusEvent evt) {
                 anomaliuserFocusLost(evt);
             }
@@ -278,12 +275,6 @@ public class ThreatIntel extends javax.swing.JFrame {
         anomaliuser.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 anomaliuserMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                anomaliuserMouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                anomaliuserMouseEntered(evt);
             }
         });
         anomaliuser.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -307,12 +298,6 @@ public class ThreatIntel extends javax.swing.JFrame {
         anomaliapikey.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 anomaliapikeyMouseClicked(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                anomaliapikeyMouseExited(evt);
-            }
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                anomaliapikeyMouseEntered(evt);
             }
         });
 
@@ -630,76 +615,29 @@ public class ThreatIntel extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_anomaliinputMouseEntered
 
-    private void anomaliapikeyMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliapikeyMouseExited
-        // TODO add your handling code here:
-        if (anomaliapikey.isFocusOwner() || !anomaliapikey.getText().isEmpty()) {
-
-        }
-        else {
-            anomaliapikey.setText("Anomali API Key");
-        }
-    }//GEN-LAST:event_anomaliapikeyMouseExited
-
-    private void anomaliapikeyMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliapikeyMouseEntered
-        // TODO add your handling code here:
-        if (anomaliapikey.getText().equals("Anomali API Key")) {
-            anomaliapikey.setText("");
-        }
-
-    }//GEN-LAST:event_anomaliapikeyMouseEntered
-
     private void anomaliapikeyMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliapikeyMouseClicked
         // TODO add your handling code here:
         //anomaliapikey.setText("");
+     
+        if (anomaliapikey.getText().isEmpty()) {
+            anomaliapikey.setText("Anomali API Key"); 
+        }
+        if (anomaliapikey.getText().equals("Anomali API Key")) {
+            anomaliapikey.setText(""); 
+        }
+        
     }//GEN-LAST:event_anomaliapikeyMouseClicked
-
-    private void anomaliapikeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliapikeyFocusLost
-        // TODO add your handling code here:
-        //if (anomaliapikey.getText().isEmpty()) {
-            //    anomaliapikey.setText("Anomali API Key");
-            // }
-    }//GEN-LAST:event_anomaliapikeyFocusLost
-
-    private void anomaliapikeyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliapikeyFocusGained
-        // TODO add your handling code here:
-        //anomaliapikey.setText("");
-    }//GEN-LAST:event_anomaliapikeyFocusGained
-
-    private void anomaliuserMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliuserMouseExited
-        // TODO add your handling code here:
-
-        if (anomaliuser.isFocusOwner() || !anomaliuser.getText().isEmpty()) {
-
-        }
-        else {
-            anomaliuser.setText("Anomali Username");
-        }
-    }//GEN-LAST:event_anomaliuserMouseExited
-
-    private void anomaliuserMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliuserMouseEntered
-        // TODO add your handling code here:
-        if (anomaliuser.getText().equals("Anomali Username")) {
-            anomaliuser.setText("");
-        }
-
-    }//GEN-LAST:event_anomaliuserMouseEntered
 
     private void anomaliuserMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_anomaliuserMouseClicked
         // TODO add your handling code here:
-        //anomaliuser.setText("");
+        
+        if (anomaliuser.getText().equals("Anomali Username")) {
+            anomaliuser.setText("");
+        }
+        if (anomaliuser.getText().isEmpty()) {
+            anomaliuser.setText(""); 
+        }
     }//GEN-LAST:event_anomaliuserMouseClicked
-
-    private void anomaliuserFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliuserFocusLost
-        // TODO add your handling code here:
-        //if (anomaliuser.getText().isEmpty()) {
-            //    anomaliuser.setText("Anomali Username");
-            //}
-    }//GEN-LAST:event_anomaliuserFocusLost
-
-    private void anomaliuserFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliuserFocusGained
-        // TODO add your handling code here:
-        //anomaliuser.setText("");
-    }//GEN-LAST:event_anomaliuserFocusGained
 
     private void checkallActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_checkallActionPerformed
         // TODO add your handling code here:
@@ -774,6 +712,37 @@ public class ThreatIntel extends javax.swing.JFrame {
                 System.out.println(e);
             }
     }//GEN-LAST:event_anomalihowtoActionPerformed
+
+    private void anomaliuserFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliuserFocusLost
+        // TODO add your handling code here:
+        
+        if (anomaliuser.getText().isEmpty()) {
+        anomaliuser.setText("Anomali Username");
+        }
+        
+    }//GEN-LAST:event_anomaliuserFocusLost
+
+    private void anomaliapikeyFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliapikeyFocusLost
+        // TODO add your handling code here:
+        
+        if (anomaliapikey.getText().isEmpty()) {
+            anomaliapikey.setText("Anomali API Key"); 
+        }
+        if (anomaliapikey.getText().equals("Anomali API Key")) {
+            anomaliapikey.setText("Anomali API Key"); 
+        }
+    }//GEN-LAST:event_anomaliapikeyFocusLost
+
+    private void anomaliapikeyFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_anomaliapikeyFocusGained
+        // TODO add your handling code here:
+        
+        if (anomaliapikey.getText().isEmpty()) {
+            anomaliapikey.setText("Anomali API Key"); 
+        }
+        if (anomaliapikey.getText().equals("Anomali API Key")) {
+            anomaliapikey.setText(""); 
+        }
+    }//GEN-LAST:event_anomaliapikeyFocusGained
 
     public void anomaliAPIcall(String IP) throws IOException {
             try {
